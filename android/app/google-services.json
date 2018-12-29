@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "374506293664",
+    "firebase_url": "https://happy-thought-c651c.firebaseio.com",
+    "project_id": "happy-thought-c651c",
+    "storage_bucket": "happy-thought-c651c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374506293664:android:c944054495a6adc6",
+        "android_client_info": {
+          "package_name": "com.example.happythought"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374506293664-8bnl4d44n6mh396030ret272mi0rss2d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.happythought",
+            "certificate_hash": "24f5bbb458475b1123ab3cd08227fad21212d401"
+          }
+        },
+        {
+          "client_id": "374506293664-48okiga555djpipam37u2a32ecc1ujfa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxdF49s9c6CSfGQydOoQpv8AT6memSbGA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374506293664-48okiga555djpipam37u2a32ecc1ujfa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "374506293664-22r5jp0clme5f0nlg9h57he71ffo1moh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.happyThought"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
