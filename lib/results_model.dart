@@ -5,6 +5,7 @@ class Results {
   final DateTime createdAt;
   final String pollID;
   final double sVal;
+  final Map<dynamic, dynamic> elements;
   final DocumentReference output;
 
   Results.fromMap(Map<String, dynamic> map, {this.output})
@@ -14,7 +15,8 @@ class Results {
 //        assert(map['val'] !=null),
         createdAt = map['created_at'],
         pollID = map['pollID'],
-        sVal = map['val'];
+        sVal = map['val'],
+        elements = map['elements'];
 
   Results.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, output: snapshot.reference);

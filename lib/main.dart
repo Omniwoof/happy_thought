@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
-//import 'poll_builder.dart';
 import 'polls_model.dart';
 import 'results_model.dart';
-import 'buildSlider.dart';
 
 void main() => runApp(MyApp());
 
@@ -34,72 +31,6 @@ class MainPage extends StatelessWidget {
   }
 
 }
-
-class PollPage extends StatefulWidget {
-  final Polls poll;
-
-  PollPage({Key key, @required this.poll}) : super(key: key);
-
-
-  @override
-  State<StatefulWidget> createState() {
-    return _PollState();
-  }
-
-}
-
-class _PollState extends State<PollPage> {
-
-  @override
-
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Poll Page'),),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Spacer(flex:1),
-            Slider(
-                label: widget.poll.slideVal.toInt().toString(),
-                min: widget.poll.min.toDouble(),
-                max: widget.poll.max.toDouble(),
-                divisions: widget.poll.max.toInt(),
-                value: widget.poll.slideVal,
-                onChanged: (val) {
-              setState(() => widget.poll.slideVal = val);
-            },
-            ),
-            RaisedButton(
-              child: Text(widget.poll.button),
-              onPressed: () =>
-                    Firestore.instance.collection('results')
-                        .document().setData(
-                        {
-                          'created_at': FieldValue.serverTimestamp(),
-                          'pollID': widget.poll.polls.documentID,
-                          'val': widget.poll.slideVal,
-                        }),
-            ),
-            Spacer(flex:1),
-          ],
-        ),
-      )
-
-      
-    );
-  }
-
-//  Widget _buildPoll(BuildContext context, DocumentSnapshot poll) {
-//    return Padding(
-//      padding: EdgeInsets.all(10.0),
-//
-//    );
-//  }
-
-}
-
-
-
 
 class ListPollsPage extends StatefulWidget {
 
@@ -145,52 +76,20 @@ class _ListPollsPageState extends State<ListPollsPage> {
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final poll = Polls.fromSnapshot(data);
+    final poll = Poll.fromSnapshot(data);
     Widget buildListTile() {
-      if (poll.max != null && poll.max > poll.min && poll.min != null){
-          return ListTile(
-            title: Column(
-              children: <Widget>[
-                Text(poll.polls.documentID),
-                Text("poll.test "+poll.test.toString()),
-              ],
-            ),
-            trailing: IconButton(
-              icon: Icon(Icons.assessment),
-              onPressed: () => _goResults(poll),
-            ),
-            subtitle: RaisedButton(
-              child: Text(poll.title),
-              onPressed: () {
-                Navigator.push(context,
-                  MaterialPageRoute(
-                      builder: (context) => PollPage(poll: poll)
-                  ),
-                );
-              },
-            ),
-          );
-      }
       if (poll.elements != null){
-//        Map<dynamic, dynamic> test = poll.elements;
-//        Map<String, dynamic> element = poll.getElements(poll.elements);
-//        print('Elements not null. ${poll.elements}');
-//        Widget listy = ListTile();
-//
-//        test.forEach((x,y) {
-//          print('X: ${x.toString()} Y: ${y.toString()}');
-//          listy = ListTile(
-//            title: Text(y.toString()),
-//          );
-//        });
-//        return listy;
         return ListTile(
+          trailing: IconButton(
+            icon: Icon(Icons.assessment),
+            onPressed: () => _goResults(poll),
+          ),
           title: RaisedButton(
               child: Text(poll.title),
               onPressed: () {
             Navigator.push(context,
               MaterialPageRoute(
-                  builder: (context) => Poll(poll: poll))
+                  builder: (context) => PollElement(poll: poll))
             );
           }),
         );
@@ -244,7 +143,7 @@ class _ListPollsPageState extends State<ListPollsPage> {
 }
 
 class ShowResults extends StatelessWidget{
-  final Polls poll;
+  final Poll poll;
 
   ShowResults({Key key, @required this.poll}) : super(key: key);
 
@@ -292,54 +191,43 @@ class ShowResults extends StatelessWidget{
         ),
         child: ListTile(
 //          trailing: Text(output.createdAt.toString()),
-          subtitle: Text(output.pollID),
-          title: Text(output.createdAt.toString()),
-          trailing: Text(output.sVal.toString()),
+//          trailing: Text(output.pollID),
+          subtitle: Text(output.createdAt.toString()),
+          title: Text('${output.elements.toString()}'),
 //              onTap: () => print(data.data.toString()),
         ),
       ),
     );
-
   }
-
-
 }
 
 
 
-class Poll extends StatefulWidget {
-  final Polls poll;
-//  var slideVal;
-//  final ElementSlider elem;
-//
-//
-//  ElementSlider({Key key, @required this.elem}) {
-//    this.elem = poll.elements.forEach((key, value) => );
-//  };
+class PollElement extends StatefulWidget {
+  final Poll poll;
 
-
-  Poll({Key key, @required this.poll}) {
-//  poll.elements.forEach((key, element) {
-//    ElementSlider.fromElement(key, element);
-//    this.slideVal = 6.0;
-//  } );
-}
+  PollElement({Key key, @required this.poll}) {}
 
 
   @override
   State<StatefulWidget> createState() {
-//    poll.elements.forEach((key, value) => print('pollele: $key $value'));
-    return _PollElementsState();
+    return PollElementsState();
   }
 
 }
 
-class _PollElementsState extends State<Poll> {
+class PollElementsState extends State<PollElement> {
+  Map<String, dynamic> formState;
 
-//  double sliderVal = 4.0;
-//
-//  _initSliderVal()
-//  {this.sliderVal = 9.0;}
+  callback(Map<String, dynamic> newState){
+    if(formState != null){
+      formState.addAll(newState);
+    }
+    else {
+      formState = newState;
+    }
+  print('newState: $newState formState: $formState');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -347,72 +235,98 @@ class _PollElementsState extends State<Poll> {
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
-      body: _buildPoll(),
+      body: buildPoll(),
     );
   }
 
-   _buildPoll(){
-     String button = widget.poll.button;
+   buildPoll(){
+
 //
-    return Container(
-      child: _buildElements()
+    return Column(
+      children: <Widget>[
+        buildElements(),
+        submitButton(),
+      ],
     );
   }
 
-  _buildElements(){
+  buildElements(){
     final List elements = List();
     Map <dynamic, dynamic> allElements = widget.poll.elements;
     allElements.forEach((key, value) => elements.add(value));
 
-    return ListView.builder(
-        itemCount: allElements.length,
-        itemBuilder: (context, index) {
-          print('element: '+elements[index].toString());
-          final elem = ElementSlider.fromElement(index, elements[index]);
+    return Expanded(
+      child: ListView.builder(
+          itemCount: allElements.length,
+          itemBuilder: (context, index) {
+//          print('element: '+elements[index].toString());
+            final elem = ElementSlider.fromElement(index, elements[index]);
 
-          if (elem.type == 'slider') {
+            if (elem.type == 'slider') {
 
-            return Element(element: elements[index]);
-          } else if (elem == null) {
-            print('Elem Null!');
-            return ListTile(
-                title: Text('ELEM type = null!'),
-            );
+              return Element(element: elements[index], callback: callback, formState: formState,);
+            } else if (elem == null) {
+              print('Elem Null!');
+              return ListTile(
+                  title: Text('ELEM type = null!'),
+              );
+            }
           }
-        }
+      ),
     );
 
   }
 
+  submitButton(){
+    String button = widget.poll.button;
+    return Expanded(
+      child: RaisedButton(
+        onPressed: () => Firestore.instance.collection('results')
+        .document().setData(
+        {
+          'created_at': FieldValue.serverTimestamp(),
+          'pollID': widget.poll.polls.documentID,
+          'elements' : formState,
+        }),
+        child: Text(button),
+      ),
+    );
+  }
 }
 
 class Element extends StatefulWidget {
   final element;
-  var slideVal;
+  double slideVal;
+  var formState;
+  Function(Map <String, dynamic>) callback;
 
-  Element({Key key, @required this.element}) : super (key : key) {
-  this.slideVal = 3.0;
+  Element({Key key, @required this.element, this.callback, this.formState}) : super (key : key) {
+  this.slideVal = 0.0;
   }
+
 
   @override
   State<StatefulWidget> createState() {
-    return _ElementState();
+    return ElementState();
   }
 
 }
 
-class _ElementState extends State<Element> {
+class ElementState extends State<Element> {
+  stateCallback(String title, num value) {
+    print("{title : $title, value: $value}");
+    return {title : title, value: value};
+  }
+//  callback(var a) {print(a);}
 
   @override
   Widget build(BuildContext context) {
-    String title = widget.element.toString();
-
-//    return Text(title);
-  return _elementTile(widget.element);
+  return elementTile(widget.element);
   }
 
-  _elementTile(element){
+  elementTile(element){
     var elem = ElementSlider.fromMap(element, element);
+//    widget.callback({elem.title: 0.0});
 
     return ListTile(
       title: Text(elem.title),
@@ -420,19 +334,20 @@ class _ElementState extends State<Element> {
         value: widget.slideVal,
         onChanged: (newValue) {
           setState(() {
-            print('newValue: $newValue');
+            Map<String, dynamic> newState = {elem.title: newValue.round()};
             widget.slideVal = newValue;
-//                      elem.setVal(newValue);
-            print('New slideVal: ${widget.slideVal}');
+            widget.callback(newState);
           });
         },
         min: elem.min,
         max: elem.max,
+        divisions: elem.max.toInt(),
         label: widget.slideVal.floor().toString(),
 
       ),
       leading: Text('Val: ${widget.slideVal.round()}'),
     );
   }
+
 }
 
