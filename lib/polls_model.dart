@@ -30,8 +30,8 @@ class ElementSlider{
   final String type;
 
   ElementSlider.fromMap(key, Map<dynamic, dynamic> map, {this.element})
-    : max = map['max'].toDouble(),
-      min = map['min'].toDouble(),
+    : max = map['max']?.toDouble(),
+      min = map['min']?.toDouble(),
       title = map['title'],
       type = map['type'];
 
