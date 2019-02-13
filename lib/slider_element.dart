@@ -4,12 +4,11 @@ import 'polls_model.dart';
 
 class SliderElement extends StatefulWidget {
   final element;
-  double slideVal;
-  var formState;
-  Function(Map <dynamic, dynamic>) callback;
+  final formState;
+  final Function(Map <dynamic, dynamic>) callback;
 
   SliderElement({Key key, @required this.element, this.callback, this.formState}) : super (key : key) {
-    this.slideVal = 0.0;
+//    this.slideVal = 0.0;
   }
 
 
@@ -21,6 +20,7 @@ class SliderElement extends StatefulWidget {
 }
 
 class SliderElementState extends State<SliderElement> {
+  double slideVal = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -33,21 +33,21 @@ class SliderElementState extends State<SliderElement> {
     return ListTile(
       title: Text(elem.title),
       subtitle: Slider(
-        value: widget.slideVal,
+        value: slideVal,
         onChanged: (newValue) {
           setState(() {
             Map<String, Map<String, dynamic>> newState = {widget.element['type']:{elem.title: newValue.round()}};
-            widget.slideVal = newValue;
+            slideVal = newValue;
             widget.callback(newState);
           });
         },
         min: elem.min,
         max: elem.max,
         divisions: elem.max.toInt(),
-        label: widget.slideVal.floor().toString(),
+        label: slideVal.floor().toString(),
 
       ),
-      leading: Text('Val: ${widget.slideVal.round()}'),
+      leading: Text('Val: ${slideVal.round()}'),
     );
   }
 

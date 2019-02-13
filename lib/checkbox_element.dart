@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CheckboxElement extends StatefulWidget {
-  Map<dynamic, dynamic> element;
-  Map<String, bool> choices = Map();
-  var formState;
-  Function(Map <dynamic, dynamic>) callback;
+  final Map<dynamic, dynamic> element;
+  final Map<String, bool> choices = Map();
+  final formState;
+  final Function(Map <dynamic, dynamic>) callback;
 
 
   CheckboxElement({Key key, @required this.element, this.callback, this.formState}) : super (key : key) {

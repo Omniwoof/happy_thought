@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class RadioElement extends StatefulWidget {
-  Map<dynamic, dynamic> element;
-  Map<String, bool> choices = Map();
-  Map<String, int> radioChoices = Map();
-  var formState;
-  Function(Map <dynamic, dynamic>) callback;
+  final Map<dynamic, dynamic> element;
+  final Map<String, bool> choices = Map();
+  final Map<String, int> radioChoices = Map();
+  final formState;
+  final Function(Map <dynamic, dynamic>) callback;
 
 
   RadioElement({Key key, @required this.element, this.callback, this.formState}) : super (key : key) {
@@ -40,6 +40,7 @@ class RadioElementState extends State<RadioElement> {
                   title: Text(key),
                   value: widget.radioChoices[key],
                   groupValue: _selected,
+                  activeColor: Colors.red,
                   onChanged: (int value) {
                     setState(() {
                       _selected = value;
