@@ -3,6 +3,7 @@ import 'polls_model.dart';
 import 'slider_element.dart';
 import 'radio_element.dart';
 import 'checkbox_element.dart';
+import 'switch_element.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -39,6 +40,14 @@ class PollElementsState extends State<PollElement> {
     else if (newState.containsKey('radio') && !formState.keys.contains('radio')) {
       Map <String, dynamic> radioState = newState['radio'];
       formState['radio'] = radioState;
+    }
+    else if (newState.containsKey('switch') && formState.keys.contains('switch')) {
+      Map <String, dynamic> radioState = newState['switch'];
+      formState['switch'].addAll(radioState);
+    }
+    else if (newState.containsKey('switch') && !formState.keys.contains('switch')) {
+      Map <String, dynamic> radioState = newState['switch'];
+      formState['switch'] = radioState;
     }
     else if (newState.containsKey('slider') && formState.keys.contains('slider')) {
       Map <String, dynamic> sliderState = newState['slider'];
@@ -97,6 +106,9 @@ class PollElementsState extends State<PollElement> {
             }
             else if (elemtype == 'radio') {
               return RadioElement(element: elements[index], callback: callback, formState: formState,);
+            }
+            else if (elemtype == 'switch') {
+              return SwitchElement(element: elements[index], callback: callback, formState: formState,);
             }
             else if (elem == null) {
               print('Elem Null!');
