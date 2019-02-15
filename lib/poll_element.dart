@@ -4,6 +4,7 @@ import 'slider_element.dart';
 import 'radio_element.dart';
 import 'checkbox_element.dart';
 import 'switch_element.dart';
+import 'textfield_element.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -38,16 +39,17 @@ class PollElementsState extends State<PollElement> {
       formState['radio'].addAll(radioState);
     }
     else if (newState.containsKey('radio') && !formState.keys.contains('radio')) {
+      //TODO: Fix radio button update to work with groups of radio buttons.
       Map <String, dynamic> radioState = newState['radio'];
       formState['radio'] = radioState;
     }
     else if (newState.containsKey('switch') && formState.keys.contains('switch')) {
-      Map <String, dynamic> radioState = newState['switch'];
-      formState['switch'].addAll(radioState);
+      Map <String, dynamic> switchState = newState['switch'];
+      formState['switch'].addAll(switchState);
     }
     else if (newState.containsKey('switch') && !formState.keys.contains('switch')) {
-      Map <String, dynamic> radioState = newState['switch'];
-      formState['switch'] = radioState;
+      Map <String, dynamic> switchState = newState['switch'];
+      formState['switch'] = switchState;
     }
     else if (newState.containsKey('slider') && formState.keys.contains('slider')) {
       Map <String, dynamic> sliderState = newState['slider'];
@@ -56,9 +58,17 @@ class PollElementsState extends State<PollElement> {
     else if (newState.containsKey('slider') && !formState.keys.contains('slider')) {
       formState.addAll(newState);
     }
+    else if (newState.containsKey('text') && formState.keys.contains('text')) {
+      Map <String, dynamic> textState = newState['text'];
+      formState['text'].addAll(textState);
+    }
+    else if (newState.containsKey('text') && !formState.keys.contains('text')) {
+      formState.addAll(newState);
+    }
     else if (formState.length == 0){
       formState = newState;
     }
+    print('Formstate: $formState');
   }
 
   @override
@@ -86,8 +96,8 @@ class PollElementsState extends State<PollElement> {
     final List elements = List();
     Map <dynamic, dynamic> allElements = widget.poll.elements;
     allElements.forEach((key, value) => elements.add(value));
-    print('All elems' + allElements.toString());
-    print('FormState : $formState');
+//    print('All elems' + allElements.toString());
+//    print('FormState : $formState');
 
     return Expanded(
       child: ListView.builder(
@@ -110,6 +120,9 @@ class PollElementsState extends State<PollElement> {
             else if (elemtype == 'switch') {
               return SwitchElement(element: elements[index], callback: callback, formState: formState,);
             }
+            else if (elemtype == 'text') {
+              return TextElement(element: elements[index], callback: callback, formState: formState,);
+            }
             else if (elem == null) {
               print('Elem Null!');
               return ListTile(
@@ -126,7 +139,11 @@ class PollElementsState extends State<PollElement> {
     //TODO: Add validation
     String button = widget.poll.button;
     return Container(
-      padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 200.0),
+//      padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 200.0),
+    constraints: BoxConstraints(
+      minHeight: 100.0,
+      minWidth: 300.0,
+    ),
       child: RaisedButton(
         onPressed: () => Firestore.instance.collection('results')
             .document().setData(

@@ -11,10 +11,13 @@ class RadioElement extends StatefulWidget {
   RadioElement({Key key, @required this.element, this.callback, this.formState}) : super (key : key) {
     if (element.containsValue('radio')){element['choices'].forEach((key, value) {
       radioChoices.addAll({value : int.parse(key)});
-    });
-    //Creates default value for radio button in formState.
-    Map <String, Map <String, dynamic>> radioValue = {element['type'] : {'0' : element['choices']['0']}};
+      print('Radiochoices: $radioChoices');
+
+      //Creates default value for radio button in formState.
+      Map <String, Map <String, dynamic>> radioValue = {element['type'] : {'0' : element['choices']['0']}};
       callback(radioValue);
+//      print('Radiovalue: $radioValue');
+    });
     }
   }
 

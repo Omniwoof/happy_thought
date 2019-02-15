@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'polls_page.dart';
+import 'auth.dart';
+import 'user_profile.dart';
+import 'login_button.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,12 +25,45 @@ class MainPage extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Happy Thought')),
-      body: ListPollsPage(),
+      appBar: AppBar(
+          title: Text('Happy Thought'),
+          actions: <Widget>[
+//            LoginButton(),
+        ],
+
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          LoginButton(),
+          UserProfile(),
+          HomeScreen(),
+//          ListPollsPage(),
+        ],
+      ),
     );
   }
 }
 
 
+class HomeScreen extends StatelessWidget {
+  @override
+
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return StreamBuilder(
+        stream: authService.user,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListPollsPage();
+          }
+          else {
+            return Container();
+          }
+        }
+    );
+  }
 
 
+}

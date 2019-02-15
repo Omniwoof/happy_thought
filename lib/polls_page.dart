@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'results_page.dart';
 import 'polls_model.dart';
 import 'poll_element.dart';
+import 'user_profile.dart';
+import 'dart:async';
 
 class ListPollsPage extends StatefulWidget {
 
@@ -14,36 +16,51 @@ class _ListPollsPageState extends State<ListPollsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Expanded(
       child: _buildFrame(context),
     );
   }
 
   Widget _buildFrame(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Flexible(
-          flex: 1,
-          child: _buildBody(context),
-        ),
-      ],
+    return Container(
+      child: _buildBody(context),
     );
   }
 
   Widget _buildBody(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('polls').snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-        return _buildList(context, snapshot.data.documents);
-      },
-    );
+    if (profile.containsKey('uid')){
+      print('profile.uid: ${profile['uid']}');
+      return StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance.collection('polls').where('client', isEqualTo: profile['uid']).snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            print('Awaiting polls');
+          return CircularProgressIndicator();
+          }
+          else{
+            print('Poll data received');
+          return _buildList(context, snapshot.data.documents);
+          }
+        },
+      );
+    }
+    else {
+      //TODO: Find better way of waiting for UID to be loaded.
+      Timer(Duration(milliseconds: 10),() {
+        print('iterating over timer');
+      return _buildFrame(context);
+      });
+
+    }
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    return ListView(
-      padding: const EdgeInsets.only(top: 20.0),
-      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+    return Container(
+      child: ListView(
+//      shrinkWrap: true,
+        padding: const EdgeInsets.only(top: 20.0),
+        children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+      ),
     );
   }
 

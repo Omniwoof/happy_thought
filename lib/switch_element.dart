@@ -44,7 +44,7 @@ class SwitchElementState extends State<SwitchElement> {
                   title: Text(key),
                   value: switchValue,
 //                  groupValue: _selected,
-                  activeColor: Colors.red,
+                  activeColor: Colors.green,
                   onChanged: (bool value) {
                     setState(() {
                       switchValue = value;
