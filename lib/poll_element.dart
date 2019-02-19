@@ -10,8 +10,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PollElement extends StatefulWidget {
   final Poll poll;
+  final String pollID;
 
-  PollElement({Key key, @required this.poll});
+  PollElement({Key key, this.poll, this.pollID});
 
 
   @override

@@ -3,6 +3,7 @@ import 'polls_page.dart';
 import 'auth.dart';
 import 'user_profile.dart';
 import 'login_button.dart';
+import 'local_notifications_service.dart';
 
 void main() => runApp(MyApp());
 
@@ -39,6 +40,7 @@ class MainPage extends StatelessWidget {
           LoginButton(),
           UserProfile(),
           HomeScreen(),
+          LocalNotification(),
 //          ListPollsPage(),
         ],
       ),
@@ -57,6 +59,7 @@ class HomeScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListPollsPage();
+//          return Container();
           }
           else {
             return Container();

@@ -23,35 +23,40 @@ class _ListPollsPageState extends State<ListPollsPage> {
 
   Widget _buildFrame(BuildContext context) {
     return Container(
+      alignment: Alignment.center,
       child: _buildBody(context),
     );
   }
 
   Widget _buildBody(BuildContext context) {
-    if (profile.containsKey('uid')){
-      print('profile.uid: ${profile['uid']}');
+//    if (profile.containsKey('uid')){
+//      print('Found profile.uid: ${profile['uid']}');
       return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('polls').where('client', isEqualTo: profile['uid']).snapshots(),
+//        stream: Firestore.instance.collection('polls').where('client', isEqualTo: profile['uid']).snapshots(),
+      stream: Firestore.instance.collection('polls').where('client', isEqualTo: 'Xq0G56MmuaPqWfhSy0GDnnbBN2r1').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             print('Awaiting polls');
-          return CircularProgressIndicator();
+          return Center(
+              child: CircularProgressIndicator()
+          );
           }
           else{
             print('Poll data received');
+//            return Text('DATA HERE');
           return _buildList(context, snapshot.data.documents);
           }
         },
       );
-    }
-    else {
-      //TODO: Find better way of waiting for UID to be loaded.
-      Timer(Duration(milliseconds: 10),() {
-        print('iterating over timer');
-      return _buildFrame(context);
-      });
-
-    }
+//    }
+//    else {
+//      //TODO: Find better way of waiting for UID to be loaded.
+//      Timer(Duration(milliseconds: 10),() {
+//        print('iterating over timer');
+//      return _buildFrame(context);
+//      });
+//
+//    }
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'auth.dart';
+import 'polls_page.dart';
 
 Map<String, dynamic> profile;
 
@@ -24,14 +25,16 @@ class UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          CircularProgressIndicator(),
+      return Container();
+//      return ListPollsPage();
+//      return Column(
+//        mainAxisSize: MainAxisSize.min,
+//        children: <Widget>[
+//          CircularProgressIndicator(),
 //        Container(padding: EdgeInsets.all(20.0), child: Text(profile.toString())),
 //          Text(_loading.toString()),
 //      ListPollsPage()
-        ],);
+//        ],);
     }else{
       return Container();
     }
