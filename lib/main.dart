@@ -41,6 +41,12 @@ class MainPage extends StatelessWidget {
           UserProfile(),
           HomeScreen(),
           LocalNotification(),
+          RaisedButton(
+            child: Text('+5 seconds notification'),
+            onPressed: () async {
+              await LocalNotificationState().scheduleNotification();
+            },
+          )
 //          ListPollsPage(),
         ],
       ),
