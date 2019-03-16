@@ -34,13 +34,29 @@ class RadioElementState extends State<RadioElement> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text(widget.element['title']),
+        FractionallySizedBox(
+          widthFactor: 1.0,
+          child: Container(
+            color: Color.fromARGB(64, 18, 35, 53),
+//            width: 300.0,
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Text(widget.element['title'], style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 20.0)),
+            ),
+          ),
+        ),
         ListView(
             shrinkWrap: true,
             padding: EdgeInsets.all(10.0),
             children: widget.radioChoices.keys.map((String key){
               return RadioListTile(
-                  title: Text(key),
+                  title: Text(key, style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20.0)),
                   value: widget.radioChoices[key],
                   groupValue: _selected,
                   activeColor: Colors.red,

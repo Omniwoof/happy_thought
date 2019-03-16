@@ -24,13 +24,29 @@ class CheckboxElementState extends State<CheckboxElement> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text(widget.element['title']),
+        FractionallySizedBox(
+          widthFactor: 1.0,
+          child: Container(
+            color: Color.fromARGB(64, 18, 35, 53),
+            padding: EdgeInsets.all(8.0),
+            child: Center(
+              child: Text(widget.element['title'], style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 20.0),),
+            ),
+          ),
+        ),
         ListView(
             shrinkWrap: true,
             padding: EdgeInsets.all(10.0),
             children: widget.choices.keys.map((String key){
               return CheckboxListTile(
-                  title: Text(key),
+                activeColor: widget.choices[key] ? Colors.red : Colors.white,
+                  title: Text(key, style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20.0),),
                   value: widget.choices[key],
                   onChanged: (bool value) {
                     setState(() {

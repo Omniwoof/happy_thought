@@ -10,8 +10,10 @@ class ShowResults extends StatelessWidget{
 
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 242, 221, 169),
       appBar: AppBar(
-        title: Text('Answer Poll'),
+        title: Text('Recent results'),
+
       ),
       body: Center(
         child: _buildOutput(context),
@@ -23,7 +25,10 @@ class ShowResults extends StatelessWidget{
 
   _buildOutput(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('results').where('pollID', isEqualTo: poll.polls.documentID).snapshots(),
+    stream: Firestore.instance.collection('polls')
+        .document(poll.polls.documentID)
+        .collection('results')
+        .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
 
@@ -45,11 +50,12 @@ class ShowResults extends StatelessWidget{
     return Padding(
       key: ValueKey(output.pollID),
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(5.0),
-        ),
+      child: Card(
+        elevation: 8.0,
+//        decoration: BoxDecoration(
+//          border: Border.all(color: Colors.white),
+//          borderRadius: BorderRadius.circular(5.0),
+//        ),
         child: ListTile(
           subtitle: Text(output.createdAt.toString()),
           title: Text('${output.elements.toString()}'),

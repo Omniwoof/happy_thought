@@ -12,9 +12,42 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Happy Thought',
+      title: 'Inside Outcomes',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Color.fromARGB(255, 51, 102, 153),
+//      primaryColor: Colors.blueGrey[700],
+//        primarySwatch: Colors.blueGrey,
+        accentColor: Colors.amberAccent,
+        backgroundColor: Color.fromARGB(255, 242, 221, 169),
+//          primaryTextTheme: TextTheme(white),
+          sliderTheme: SliderThemeData(
+              trackHeight: 2.0,
+              activeTrackColor: Color.fromARGB(255, 242, 221, 169),
+              inactiveTrackColor: Color.fromARGB(255, 242, 221, 169),
+              disabledActiveTrackColor: Colors.black,
+              disabledInactiveTrackColor: Colors.black,
+              activeTickMarkColor: Colors.white,
+              inactiveTickMarkColor: Colors.white,
+              disabledActiveTickMarkColor: Colors.black,
+              disabledInactiveTickMarkColor: Colors.black,
+              thumbColor: Color.fromARGB(255, 242, 221, 169),
+              disabledThumbColor: Colors.black,
+              overlayColor: Colors.red,
+              valueIndicatorColor: Color.fromARGB(255, 242, 221, 169),
+              trackShape: RectangularSliderTrackShape(),
+              tickMarkShape: RoundSliderTickMarkShape (),
+              thumbShape: RoundSliderThumbShape(),
+              overlayShape: RoundSliderOverlayShape(),
+              valueIndicatorShape: PaddleSliderValueIndicatorShape(),
+              showValueIndicator: ShowValueIndicator.onlyForDiscrete,
+              valueIndicatorTextStyle: TextStyle(color: Colors.black),
+//              valueIndicatorTextStyle: ThemeData.fallback().accentTextTheme.body2.copyWith(color: Color(0xfeedcafe)),
+    ),
+        cardColor: Colors.amber,
+        primaryColorDark: Colors.red,
+        primarySwatch: Colors.red,
+        buttonColor: Colors.amber,
+        unselectedWidgetColor: Colors.white,
       ),
       home: MainPage(),
     );
@@ -26,27 +59,28 @@ class MainPage extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 242, 221, 169),
       appBar: AppBar(
-          title: Text('Happy Thought'),
+          title: Text('Inside Outcomes'),
           actions: <Widget>[
 //            LoginButton(),
         ],
 
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+//        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           LoginButton(),
-          UserProfile(),
+//          UserProfile(),
           HomeScreen(),
-          LocalNotification(),
-          RaisedButton(
-            child: Text('+5 seconds notification'),
-            onPressed: () async {
-              await LocalNotificationState().scheduleNotification();
-            },
-          )
+//          LocalNotification(),
+//          RaisedButton(
+//            child: Text('+5 seconds notification'),
+//            onPressed: () async {
+////              await LocalNotificationState().scheduleNotification();
+//            },
+//          )
 //          ListPollsPage(),
         ],
       ),
@@ -64,6 +98,8 @@ class HomeScreen extends StatelessWidget {
         stream: authService.user,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+//            LocalNotification();
+//            NotificationService().checkNotfications();
             return ListPollsPage();
 //          return Container();
           }

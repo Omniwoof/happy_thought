@@ -45,17 +45,35 @@ class TextElementState extends State<TextElement> {
   }
 
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(widget.element['title']),
-        TextField(
-          controller: textContoller,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            hintText: 'Type away!',
+    return Container(
+      margin: EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+//      decoration: BoxDecoration(
+//        border: Border(
+//          bottom: BorderSide(color: Colors.white, width: 2.0)
+//        )
+//      ),
+      child: TextField(
+        style: new TextStyle(color: Colors.white),
+        controller: textContoller,
+        //Expands textfield as input hits end of line
+        maxLines: null,
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white, width: 2.0)
           ),
-        )
-      ],
+          labelText: widget.element['title'],
+          labelStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontSize: 20.0),
+          fillColor: Colors.white,
+//          border: OutlineInputBorder(borderRadius: BorderRadius.all(,Radius.circular(10.0))),
+        //TODO: Either replace or remove hintext withs something more appropriate.
+          hintText: 'Type away!',
+          hintStyle: TextStyle(color: Colors.white),
+        ),
+      ),
     );
   }
 }

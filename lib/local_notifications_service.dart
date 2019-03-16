@@ -1,10 +1,56 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'poll_element.dart';
 import 'polls_model.dart';
 import 'package:flutter/cupertino.dart';
+import 'auth.dart';
 import 'dart:typed_data';
+import 'schedule_model.dart';
 
+
+class NotificationService{
+  Stream<QuerySnapshot> notificationStream =
+  //TODO: Fix this document reference
+      Firestore.instance.collection('users')
+          .document('Xq0G56MmuaPqWfhSy0GDnnbBN2r1')
+          .collection('notifications')
+          .snapshots();
+
+
+  checkNotfications(){
+    Iterable<Map<String, dynamic>> notifications;
+
+
+    print('checking notifications');
+//    notificationStream.listen((data) => print(data.documents.map((k)=> k.data)));
+    notificationStream.listen((snapshot){
+      var notes = snapshot.documents.map((data){
+        var schedule = Schedule.fromMap(data.data);
+//        print('Data.data: ${data.data}');
+        print(schedule.pollId);
+        if(schedule.repeat == 'daily'){
+          print('Daily found!');
+          LocalNotificationState()._showDailyAtTime(schedule);
+        }
+        else if(schedule.repeat == 'weekly') {
+          LocalNotificationState()._showWeeklyAtDayAndTime(schedule);
+        }
+        else if(schedule.repeat == 'none') {
+          LocalNotificationState().scheduleNotification(schedule);
+        }
+        return data.data;
+      });
+//      print('Notes: $notes');
+      notifications = notes;
+      print('Notifications: $notifications');
+    });
+
+  }
+
+
+
+}
 
 
 class LocalNotification extends StatefulWidget {
@@ -34,6 +80,18 @@ class LocalNotificationState extends State<LocalNotification>{
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
+  print('Trigger StreamBuilder');
+    StreamBuilder(
+//      stream: Firestore.instance.collection('user')
+//          .document('Xq0G56MmuaPqWfhSy0GDnnbBN2r1')
+//          .collection('notifications').document()
+//          .snapshots(),
+      stream: Firestore.instance.collection('polls').where('client', isEqualTo: 'Xq0G56MmuaPqWfhSy0GDnnbBN2r1').snapshots(),
+      builder: (context, snapshot) {
+        if(snapshot.hasData){print('Testing Notifications Stream: $snapshot');}
+        else{print('NO DATA IN SNAPSHOT');}
+      },
+    );
 
   }
 
@@ -74,8 +132,10 @@ class LocalNotificationState extends State<LocalNotification>{
     );
   }
 
-  Future scheduleNotification() async {
-    var scheduleNotificationDateTime = new DateTime.now().add(new Duration(seconds: 5));
+  Future scheduleNotification(schedule) async {
+//    var scheduleNotificationDateTime = new DateTime.now().add(new Duration(seconds: 5));
+    var scheduleNotificationDateTime = new DateTime(schedule.year, schedule.month, schedule.day, schedule.hour, schedule.minute, 0);
+    print('scheduleNotificationDateTime: $scheduleNotificationDateTime');
     var vibrationPattern = new Int64List(4);
     vibrationPattern[0] = 0;
     vibrationPattern[1] = 1000;
@@ -84,7 +144,7 @@ class LocalNotificationState extends State<LocalNotification>{
 
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'channel id',
-        'channel name',
+        schedule.pollId,
         'channel desc',
         importance: Importance.Max, priority: Priority.High,
         icon: 'ic_io_notification',
@@ -103,12 +163,11 @@ class LocalNotificationState extends State<LocalNotification>{
         androidPlatformChannelSpecifics,
         IOSPlatformChannelSpecifics
     );
-    print('Notficifation sent');
 
     await flutterLocalNotificationsPlugin.schedule(
         0,
-        'scheduled title',
-        'scheduled body',
+        schedule.pollId,
+        'Single notification scheduled body',
         scheduleNotificationDateTime,
         platformChannelSpecifics
     );
@@ -116,20 +175,46 @@ class LocalNotificationState extends State<LocalNotification>{
   }
 
 
-  Future showNotification() async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'your channel id', 'your channel name', 'your channel desc',
-      importance: Importance.Max, priority: Priority.High
-    );
-
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpeficics = NotificationDetails(
+  Future _showDailyAtTime(schedule) async {
+    var time = new Time(schedule.hour, schedule.minute, 0);
+    print('Daily Schedule: ${time.hour}:${time.minute}.${time.second}');
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'repeatDailyAtTime channel id',
+        'repeatDailyAtTime channel name',
+        'repeatDailyAtTime description');
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-        0, 'plain title', 'plain body', platformChannelSpeficics,
-    payload: 'item x');
+    await flutterLocalNotificationsPlugin.showDailyAtTime(
+        0,
+        'show daily title',
+        'Daily notification shown at approximately ${_toTwoDigitString(time.hour)}:${_toTwoDigitString(time.minute)}:${_toTwoDigitString(time.second)}',
+        time,
+        platformChannelSpecifics);
+  }
 
+  Future _showWeeklyAtDayAndTime(schedule) async {
+    var time = new Time(schedule.hour, schedule.minute, 0);
+    var day = schedule.dayOfTheWeek;
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'show weekly channel id',
+        'show weekly channel name',
+        'show weekly description');
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+        0,
+        'show weekly title',
+        'Weekly notification shown on $day at approximately ${_toTwoDigitString(time.hour)}:${_toTwoDigitString(time.minute)}:${_toTwoDigitString(time.second)}',
+        Day.Monday,
+//        day,
+        time,
+        platformChannelSpecifics);
+  }
 
+  String _toTwoDigitString(int value) {
+    return value.toString().padLeft(2, '0');
   }
 
   @override

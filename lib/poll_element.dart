@@ -77,6 +77,8 @@ class PollElementsState extends State<PollElement> {
     String title = widget.poll.title;
 
     return Scaffold(
+
+      backgroundColor: Color.fromARGB(255, 242, 221, 169),
       appBar: AppBar(title: Text(title)),
       body: buildPoll(),
     );
@@ -85,11 +87,20 @@ class PollElementsState extends State<PollElement> {
   buildPoll(){
 
 //
-    return Column(
-      children: <Widget>[
-        buildElements(),
-        submitButton(),
-      ],
+    return Center(
+      child: Card(
+        margin: EdgeInsets.all(16.0),
+        color: Color.fromARGB(255, 51, 102, 153),
+        elevation: 8.0,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Flexible(child: buildElements(),),
+            submitButton(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -100,8 +111,15 @@ class PollElementsState extends State<PollElement> {
 //    print('All elems' + allElements.toString());
 //    print('FormState : $formState');
 
-    return Expanded(
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Colors.red, width: 2.0)
+        )
+      ),
       child: ListView.builder(
+          shrinkWrap: true,
+          padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
           itemCount: allElements.length,
           itemBuilder: (context, index) {
             final elem = ElementSlider.fromElement(index, elements[index]);
@@ -140,21 +158,80 @@ class PollElementsState extends State<PollElement> {
     //TODO: Add validation
     String button = widget.poll.button;
     return Container(
-//      padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 200.0),
-    constraints: BoxConstraints(
-      minHeight: 100.0,
-      minWidth: 300.0,
-    ),
-      child: RaisedButton(
-        onPressed: () => Firestore.instance.collection('results')
-            .document().setData(
-            {
-              'created_at': FieldValue.serverTimestamp(),
-              'pollID': widget.poll.polls.documentID,
-              'elements' : formState,
-            }),
-        child: Text(button),
+      padding: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
+      child: MaterialButton(
+        color: Colors.white,
+        elevation: 8.0,
+        onPressed: () {
+          submitForm()
+//              .catchError((errorMessage) {
+//                print('Submission failed: $errorMessage');
+//                showSubmitFailure();
+//              })
+              .then(showSubmitSuccess());
+        },
+        child: Text(button,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+                fontSize: 20.0)
+        ),
       ),
     );
   }
+
+  submitForm() async {
+//    Firestore.instance.collection('results')
+//      print('submitting data: ${formState}');
+      await Firestore.instance.collection('polls')
+          .document(widget.poll.polls.documentID)
+          .collection('results')
+          .document().setData(
+        {
+          'created_at': FieldValue.serverTimestamp(),
+          'pollID': widget.poll.polls.documentID,
+          'elements' : formState,
+        });
+  }
+
+  showSubmitSuccess() {
+    Navigator.pop(context);
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 48.0,
+              color: Colors.green,
+              child: Center(
+                  child: Text('Saved',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20.0))
+              )
+          );
+        }
+    );
+  }
+
+  showSubmitFailure() {
+    Navigator.pop(context);
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+              height: 48.0,
+              color: Colors.red,
+              child: Center(
+                  child: Text('Failed to submit answer. Please check network connection and try again.',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20.0))
+              )
+          );
+        }
+    );
+  }
+
 }
