@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'polls_page.dart';
 import 'auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'user_profile.dart';
 import 'login_button.dart';
 import 'local_notifications_service.dart';
+import 'FCM_service.dart';
+
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 void main() => runApp(MyApp());
 
 
 class MyApp extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -72,8 +78,8 @@ class MainPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           LoginButton(),
-//          UserProfile(),
           HomeScreen(),
+          FCMService(),
 //          LocalNotification(),
 //          RaisedButton(
 //            child: Text('+5 seconds notification'),

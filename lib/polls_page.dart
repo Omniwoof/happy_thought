@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'results_page.dart';
 import 'polls_model.dart';
 import 'poll_element.dart';
+import 'local_notifications_service.dart';
 import 'user_profile.dart';
 import 'dart:async';
 import 'auth.dart';
@@ -17,7 +18,7 @@ class ListPollsPage extends StatefulWidget {
 
 class ListPollsPageState extends State<ListPollsPage> {
 
-  var _currentUID;
+  var currentUID;
   var _profile;
 
 
@@ -35,7 +36,12 @@ class ListPollsPageState extends State<ListPollsPage> {
         stream: FirebaseAuth.instance.currentUser().asStream(),
         builder:
             (BuildContext context, AsyncSnapshot<FirebaseUser> snapshot) {
+          if(snapshot.hasData){
+            currentUID = snapshot.data.uid;
           return _buildBody(context, snapshot.data.uid);
+          }
+          else
+          {return Container();}
         }
     );
 
@@ -48,7 +54,7 @@ class ListPollsPageState extends State<ListPollsPage> {
 //    print('Current User: $userID');
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('polls').where(
-          'client', isEqualTo: userID).snapshots(),
+          'client', isEqualTo: userID ).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
 //          print('Awaiting polls');
@@ -57,8 +63,6 @@ class ListPollsPageState extends State<ListPollsPage> {
           );
         }
         else {
-//          print('Poll data received');
-//            return Text('DATA HERE');
           return _buildList(context, snapshot.data.documents);
         }
       },
@@ -77,6 +81,27 @@ class ListPollsPageState extends State<ListPollsPage> {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final poll = Poll.fromSnapshot(data);
+
+    showSubmitSuccess() {
+//      Navigator.pop(context);
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+                height: 48.0,
+                color: Colors.green,
+                child: Center(
+                    child: Text('Saved',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20.0))
+                )
+            );
+          }
+      );
+    }
+
     Widget buildListTile() {
       if (poll.elements != null){
         return Card(
@@ -115,26 +140,37 @@ class ListPollsPageState extends State<ListPollsPage> {
       }
       else {
         return Card(
-          elevation: 8.0,
+          color: Color.fromARGB(255, 51, 102, 153),
+          elevation: 10.0,
           child: ListTile(
-            title: Column(
-              children: <Widget>[
-                Text(poll.polls.documentID),
-              ],
-            ),
             trailing: IconButton(
+              color: Colors.white,
               icon: Icon(Icons.assessment),
+              iconSize: 40.0,
               onPressed: () => _goResults(poll),
             ),
-            subtitle: MaterialButton(
-                child: Text(poll.title),
-                onPressed: () =>
-                    Firestore.instance.collection('results')
-                        .document().setData(
-                        {
-                          'created_at': FieldValue.serverTimestamp(),
-                          'pollID': poll.polls.documentID,
-                        })
+            title: Container(
+              padding: EdgeInsets.only(right: 16.0),
+              decoration: BoxDecoration(
+                  border: Border(
+                      right: BorderSide(width: 2.0, color: Colors.white)
+                  )
+              ),
+              child: FlatButton(
+                  child: Text(poll.title, style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20.0),),
+                  onPressed: () {
+                      Firestore.instance.collection('results')
+                          .document().setData(
+                          {
+                            'created_at': FieldValue.serverTimestamp(),
+                            'pollID': poll.polls.documentID,
+                          });
+                      showSubmitSuccess();
+                  }
+              ),
             ),
           ),
         );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'sched_test.dart';
 
 class LoginButton extends StatelessWidget {
   @override
@@ -13,6 +14,10 @@ class LoginButton extends StatelessWidget {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+//                RaisedButton(
+//                  child: Text('Notifications'),
+//                  onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SchedHomePage()));},
+//                ),
                 Container(
                   margin: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 8.0),
                   child: StreamBuilder(
@@ -20,9 +25,10 @@ class LoginButton extends StatelessWidget {
                       builder:
                       (BuildContext context, AsyncSnapshot<FirebaseUser> userSnapshot) {
                         //TODO: Fix this. Flashing overflow errors when photoUrl doesn't exist yet
-                        if (userSnapshot.data.photoUrl != null) {
+                        if (userSnapshot.hasData) {
+                          print('PhotoURL: ${snapshot.data.photoUrl}');
                           return FloatingActionButton(
-                            //TODO: Do we need to show more client details?
+                            //TODO: Do we need to show more client details onClick?
                             onPressed: () {},
                             elevation: 16.0,
                             child: CircleAvatar(
