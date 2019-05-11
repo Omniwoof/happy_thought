@@ -82,24 +82,27 @@ class ListPollsPageState extends State<ListPollsPage> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final poll = Poll.fromSnapshot(data);
 
-    showSubmitSuccess() {
+    void showSubmitSuccess(context) {
 //      Navigator.pop(context);
-      showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return Container(
-                height: 48.0,
-                color: Colors.green,
-                child: Center(
-                    child: Text('Saved',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 20.0))
-                )
-            );
-          }
-      );
+//      showModalBottomSheet(
+//          context: context,
+//          builder: (BuildContext bc) {
+////            Future.delayed(Duration(seconds: 2), () {
+////              Navigator.of(bc, rootNavigator: true).pop();
+////            });
+//            return Container(
+//                height: 48.0,
+//                color: Colors.green,
+//                child: Center(
+//                    child: Text('Saved to database',
+//                        style: TextStyle(
+//                            fontWeight: FontWeight.bold,
+//                            color: Colors.white,
+//                            fontSize: 20.0))
+//                )
+//            );
+//          }
+//      );
     }
 
     Widget buildListTile() {
@@ -162,13 +165,15 @@ class ListPollsPageState extends State<ListPollsPage> {
                       color: Colors.white,
                       fontSize: 20.0),),
                   onPressed: () {
-                      Firestore.instance.collection('results')
-                          .document().setData(
+                    Firestore.instance.collection('polls')
+                        .document(poll.polls.documentID)
+                        .collection('results')
+                        .document().setData(
                           {
                             'created_at': FieldValue.serverTimestamp(),
                             'pollID': poll.polls.documentID,
                           });
-                      showSubmitSuccess();
+                      showSubmitSuccess(context);
                   }
               ),
             ),

@@ -163,12 +163,13 @@ class PollElementsState extends State<PollElement> {
         color: Colors.white,
         elevation: 8.0,
         onPressed: () {
-          submitForm()
+          submitForm();
+          _showSubmitSuccess();
 //              .catchError((errorMessage) {
 //                print('Submission failed: $errorMessage');
 //                showSubmitFailure();
 //              })
-              .then(showSubmitSuccess());
+//              .then(_showSubmitSuccess());
         },
         child: Text(button,
             style: TextStyle(
@@ -194,24 +195,31 @@ class PollElementsState extends State<PollElement> {
         });
   }
 
-  showSubmitSuccess() {
-    Navigator.pop(context);
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: 48.0,
-              color: Colors.green,
-              child: Center(
-                  child: Text('Saved',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20.0))
-              )
-          );
-        }
-    );
+  _showSubmitSuccess() {
+    print('Show Submit Success');
+    Future.delayed(Duration(seconds: 2), (){
+      Navigator.of(context).pop();
+    });
+//    Navigator.pop(context);
+//    showModalBottomSheet(
+//        context: context,
+//        builder: (BuildContext context) {
+//          Future.delayed(Duration(seconds:2), () {
+//            Navigator.of(context, rootNavigator: true).pop();
+//          });
+//          return Container(
+//            height: 48.0,
+//              color: Colors.green,
+//              child: Center(
+//                  child: Text('Saved to database',
+//                      style: TextStyle(
+//                          fontWeight: FontWeight.bold,
+//                          color: Colors.white,
+//                          fontSize: 20.0))
+//              )
+//          );
+//        }
+//    );
   }
 
   showSubmitFailure() {

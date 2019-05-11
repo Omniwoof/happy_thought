@@ -11,7 +11,7 @@ class Results {
       :
 //      : assert(map['created_at'] !=null),
 //        assert(map['pollID'] !=null),
-        createdAt = map['created_at'],
+        createdAt = map['created_at'].toDate(),
         pollID = map['pollID'],
         elements = map['elements'];
 

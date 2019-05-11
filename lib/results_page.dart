@@ -28,6 +28,8 @@ class ShowResults extends StatelessWidget{
     stream: Firestore.instance.collection('polls')
         .document(poll.polls.documentID)
         .collection('results')
+        .orderBy("created_at", descending: true)
+        .limit(5)
         .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();

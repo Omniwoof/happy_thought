@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'sched_test.dart';
+
 
 class LoginButton extends StatelessWidget {
   @override
@@ -24,9 +24,8 @@ class LoginButton extends StatelessWidget {
                       stream: FirebaseAuth.instance.currentUser().asStream(),
                       builder:
                       (BuildContext context, AsyncSnapshot<FirebaseUser> userSnapshot) {
-                        //TODO: Fix this. Flashing overflow errors when photoUrl doesn't exist yet
                         if (userSnapshot.hasData) {
-                          print('PhotoURL: ${snapshot.data.photoUrl}');
+//                          print('PhotoURL: ${snapshot.data.photoUrl}');
                           return FloatingActionButton(
                             //TODO: Do we need to show more client details onClick?
                             onPressed: () {},
