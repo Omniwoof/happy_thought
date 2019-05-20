@@ -6,7 +6,8 @@ import 'checkbox_element.dart';
 import 'switch_element.dart';
 import 'textfield_element.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+//import 'package:audioplayers/audio_cache.dart';
+//import 'package:vibrate/vibrate.dart';
 
 class PollElement extends StatefulWidget {
   final Poll poll;
@@ -24,9 +25,13 @@ class PollElement extends StatefulWidget {
 
 class PollElementsState extends State<PollElement> {
   Map<String, Map<String, dynamic>> formState = {};
+//  static AudioCache player = new AudioCache();
+
+
 
 
   callback(Map<dynamic, dynamic> newState){
+//    player.load('chime.wav');
 
     if (newState.keys.contains('checkbox') && formState.keys.contains('checkbox')){
       Map <String, dynamic> checkboxState = newState['checkbox'];
@@ -108,8 +113,7 @@ class PollElementsState extends State<PollElement> {
     final List elements = List();
     Map <dynamic, dynamic> allElements = widget.poll.elements;
     allElements.forEach((key, value) => elements.add(value));
-//    print('All elems' + allElements.toString());
-//    print('FormState : $formState');
+
 
     return Container(
       decoration: BoxDecoration(
@@ -124,7 +128,6 @@ class PollElementsState extends State<PollElement> {
           itemBuilder: (context, index) {
             final elem = ElementSlider.fromElement(index, elements[index]);
             final elemtype = elements[index]['type'];
-//            print ('Elemtype: ${elemtype}');
 
             if (elemtype == 'slider') {
 
@@ -182,8 +185,7 @@ class PollElementsState extends State<PollElement> {
   }
 
   submitForm() async {
-//    Firestore.instance.collection('results')
-//      print('submitting data: ${formState}');
+
       await Firestore.instance.collection('polls')
           .document(widget.poll.polls.documentID)
           .collection('results')
@@ -197,29 +199,14 @@ class PollElementsState extends State<PollElement> {
 
   _showSubmitSuccess() {
     print('Show Submit Success');
-    Future.delayed(Duration(seconds: 2), (){
+//    player.play('chime.wav');
+//    Vibrate.vibrate();
+//    Navigator.of(context).pop();
+
+
+    Future.delayed(Duration(milliseconds: 250), (){
       Navigator.of(context).pop();
     });
-//    Navigator.pop(context);
-//    showModalBottomSheet(
-//        context: context,
-//        builder: (BuildContext context) {
-//          Future.delayed(Duration(seconds:2), () {
-//            Navigator.of(context, rootNavigator: true).pop();
-//          });
-//          return Container(
-//            height: 48.0,
-//              color: Colors.green,
-//              child: Center(
-//                  child: Text('Saved to database',
-//                      style: TextStyle(
-//                          fontWeight: FontWeight.bold,
-//                          color: Colors.white,
-//                          fontSize: 20.0))
-//              )
-//          );
-//        }
-//    );
   }
 
   showSubmitFailure() {

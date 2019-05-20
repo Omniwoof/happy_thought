@@ -25,7 +25,6 @@ class LoginButton extends StatelessWidget {
                       builder:
                       (BuildContext context, AsyncSnapshot<FirebaseUser> userSnapshot) {
                         if (userSnapshot.hasData) {
-//                          print('PhotoURL: ${snapshot.data.photoUrl}');
                           return FloatingActionButton(
                             //TODO: Do we need to show more client details onClick?
                             onPressed: () {},
