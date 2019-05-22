@@ -6,8 +6,8 @@ import 'checkbox_element.dart';
 import 'switch_element.dart';
 import 'textfield_element.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:audioplayers/audio_cache.dart';
-//import 'package:vibrate/vibrate.dart';
+import 'package:audioplayers/audio_cache.dart';
+import 'package:vibrate/vibrate.dart';
 
 class PollElement extends StatefulWidget {
   final Poll poll;
@@ -25,13 +25,13 @@ class PollElement extends StatefulWidget {
 
 class PollElementsState extends State<PollElement> {
   Map<String, Map<String, dynamic>> formState = {};
-//  static AudioCache player = new AudioCache();
+  static AudioCache player = new AudioCache();
 
 
 
 
   callback(Map<dynamic, dynamic> newState){
-//    player.load('chime.wav');
+    player.load('chime.wav');
 
     if (newState.keys.contains('checkbox') && formState.keys.contains('checkbox')){
       Map <String, dynamic> checkboxState = newState['checkbox'];
@@ -199,8 +199,8 @@ class PollElementsState extends State<PollElement> {
 
   _showSubmitSuccess() {
     print('Show Submit Success');
-//    player.play('chime.wav');
-//    Vibrate.vibrate();
+    player.play('chime.wav');
+    Vibrate.vibrate();
 //    Navigator.of(context).pop();
 
 

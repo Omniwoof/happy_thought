@@ -9,8 +9,8 @@ import 'user_profile.dart';
 import 'dart:async';
 import 'auth.dart';
 import 'package:rxdart/rxdart.dart';
-//import 'package:audioplayers/audio_cache.dart';
-//import 'package:vibrate/vibrate.dart';
+import 'package:audioplayers/audio_cache.dart';
+import 'package:vibrate/vibrate.dart';
 
 class ListPollsPage extends StatefulWidget {
 
@@ -20,7 +20,7 @@ class ListPollsPage extends StatefulWidget {
 
 class ListPollsPageState extends State<ListPollsPage> {
 
-//  static AudioCache player = new AudioCache();
+  static AudioCache player = new AudioCache();
 
   var currentUID;
   var _profile;
@@ -28,7 +28,7 @@ class ListPollsPageState extends State<ListPollsPage> {
 
   @override
   Widget build(BuildContext context) {
-//    player.load('chime.wav');
+    player.load('chime.wav');
 
 
 //      return Container();
@@ -89,8 +89,8 @@ class ListPollsPageState extends State<ListPollsPage> {
 
     void showSubmitSuccess(context) {
       print('playsound');
-//      Vibrate.vibrate();
-//      player.play('chime.wav');
+      Vibrate.vibrate();
+      player.play('chime.wav');
 //      Navigator.pop(context);
 //      showModalBottomSheet(
 //          context: context,
