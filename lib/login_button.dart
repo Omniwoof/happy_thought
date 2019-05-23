@@ -49,13 +49,13 @@ class LoginButton extends StatelessWidget {
                   child: MaterialButton(
                     onPressed: () => authService.signOut(),
                     elevation: 8.0,
-                    color: Colors.red,
-                    textColor: Colors.white,
+                    color: Colors.white,
+                    textColor: Colors.black,
                     padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
                     child: Text('Signout',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 20.0)
+                            )
                     ),
                   ),
                 ),
@@ -74,7 +74,7 @@ class LoginButton extends StatelessWidget {
                 child: Text('Login with Google',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 20.0)
+                        )
                 ),
               ),
             );

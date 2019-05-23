@@ -138,7 +138,7 @@ class ListPollsPageState extends State<ListPollsPage> {
                   child: Text(poll.title, style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 20.0),),
+                      ),),
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(
@@ -171,7 +171,7 @@ class ListPollsPageState extends State<ListPollsPage> {
                   child: Text(poll.title, style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 20.0),),
+                      ),),
                   onPressed: () {
                     Firestore.instance.collection('polls')
                         .document(poll.polls.documentID)

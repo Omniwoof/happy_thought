@@ -66,7 +66,7 @@ class TextElementState extends State<TextElement> {
           labelStyle: TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.white,
-              fontSize: 20.0),
+              ),
           fillColor: Colors.white,
 //          border: OutlineInputBorder(borderRadius: BorderRadius.all(,Radius.circular(10.0))),
         //TODO: Either replace or remove hintext withs something more appropriate.

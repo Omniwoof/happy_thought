@@ -44,7 +44,7 @@ class RadioElementState extends State<RadioElement> {
               child: Text(widget.element['title'], style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
-                  fontSize: 20.0)),
+                  )),
             ),
           ),
         ),
@@ -56,7 +56,7 @@ class RadioElementState extends State<RadioElement> {
                   title: Text(key, style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 20.0)),
+                      )),
                   value: widget.radioChoices[key],
                   groupValue: _selected,
                   activeColor: Colors.red,

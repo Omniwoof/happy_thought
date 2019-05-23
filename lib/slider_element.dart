@@ -42,7 +42,7 @@ class SliderElementState extends State<SliderElement> {
               child: Text(elem.title, style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
-                  fontSize: 20.0)),
+                  )),
             ),
           ),
         ),

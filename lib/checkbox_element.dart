@@ -33,7 +33,7 @@ class CheckboxElementState extends State<CheckboxElement> {
               child: Text(widget.element['title'], style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
-                  fontSize: 20.0),),
+                  ),),
             ),
           ),
         ),
@@ -46,7 +46,7 @@ class CheckboxElementState extends State<CheckboxElement> {
                   title: Text(key, style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      fontSize: 20.0),),
+                      ),),
                   value: widget.choices[key],
                   onChanged: (bool value) {
                     setState(() {

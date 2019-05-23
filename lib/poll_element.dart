@@ -177,8 +177,8 @@ class PollElementsState extends State<PollElement> {
         child: Text(button,
             style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
-                fontSize: 20.0)
+                color: Colors.black,
+                )
         ),
       ),
     );
@@ -222,7 +222,7 @@ class PollElementsState extends State<PollElement> {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          fontSize: 20.0))
+                          ))
               )
           );
         }
